@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 	"github.com/terminator791/clean-architecture-GO/internal/usecase"
@@ -81,8 +82,13 @@ func (c *ProductController) CreateProduct(w http.ResponseWriter, r *http.Request
 
 // GetProduct handles GET /products/{id}
 func (c *ProductController) GetProduct(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Path[len("/products/"):]
-	id, err := uuid.Parse(idStr)
+	path := strings.TrimPrefix(r.URL.Path, "/products/")
+	if path == "" || path == r.URL.Path {
+		writeErrorResponse(w, http.StatusBadRequest, "INVALID_URL", "Product ID is required")
+		return
+	}
+	
+	id, err := uuid.Parse(path)
 	if err != nil {
 		writeErrorResponse(w, http.StatusBadRequest, "INVALID_UUID", "Invalid product ID format")
 		return
@@ -132,8 +138,13 @@ func (c *ProductController) GetAllProducts(w http.ResponseWriter, r *http.Reques
 
 // UpdateProduct handles PUT /products/{id}
 func (c *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Path[len("/products/"):]
-	id, err := uuid.Parse(idStr)
+	path := strings.TrimPrefix(r.URL.Path, "/products/")
+	if path == "" || path == r.URL.Path {
+		writeErrorResponse(w, http.StatusBadRequest, "INVALID_URL", "Product ID is required")
+		return
+	}
+	
+	id, err := uuid.Parse(path)
 	if err != nil {
 		writeErrorResponse(w, http.StatusBadRequest, "INVALID_UUID", "Invalid product ID format")
 		return
@@ -164,8 +175,13 @@ func (c *ProductController) UpdateProduct(w http.ResponseWriter, r *http.Request
 
 // DeleteProduct handles DELETE /products/{id}
 func (c *ProductController) DeleteProduct(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Path[len("/products/"):]
-	id, err := uuid.Parse(idStr)
+	path := strings.TrimPrefix(r.URL.Path, "/products/")
+	if path == "" || path == r.URL.Path {
+		writeErrorResponse(w, http.StatusBadRequest, "INVALID_URL", "Product ID is required")
+		return
+	}
+	
+	id, err := uuid.Parse(path)
 	if err != nil {
 		writeErrorResponse(w, http.StatusBadRequest, "INVALID_UUID", "Invalid product ID format")
 		return
